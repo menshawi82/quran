@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -19,6 +19,55 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  <meta name="theme-color" content="#E9EDF2">
+
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: #E9EDF2;
+      color: #263238;
+      font-family: Arial, sans-serif;
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 16px;
+      background: #E9EDF2;
+      text-align: center;
+    }
+
+    #loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #cbd5d2;
+      border-top-color: #2E7D5B;
+      border-radius: 50%;
+      animation: loading-spin 0.8s linear infinite;
+    }
+
+    @keyframes loading-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #loading-spinner {
+        animation: none;
+      }
+    }
+  </style>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -33,6 +82,18 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <div id="loading" role="status" aria-live="polite">
+    <div id="loading-spinner" aria-hidden="true"></div>
+    <p>جارٍ تحميل التطبيق...</p>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.remove();
+      }
+    });
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
