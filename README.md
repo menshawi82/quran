@@ -1,17 +1,31 @@
-# talawat
+# تلاوات
 
-A new Flutter project.
+تطبيق للاستماع إلى تلاوات القرآن الكريم، ومتابعة الإذاعات القرآنية، وقراءة أذكار الصباح والمساء والرقية الشرعية.
 
-## Getting Started
+## المزايا
 
-This project is a starting point for a Flutter application.
+- تصفح القراء والروايات والسور، مع البحث وإضافة القراء إلى المفضلة.
+- الاستماع إلى السور وإلى الإذاعات القرآنية المباشرة.
+- تنزيل السور على أجهزة أندرويد للاستماع إليها دون اتصال بالإنترنت.
+- وضع أوفلاين لتشغيل الملفات المحفوظة فقط.
+- حفظ موضع الاستماع وقائمة التشغيل لاستكمالهما لاحقًا.
+- أذكار الصباح والمساء مع عدّاد للتكرار، وبث للرقية الشرعية.
+- واجهة عربية تدعم المظهر الفاتح والداكن والتلقائي.
 
-A few resources to get you started if this is your first Flutter project:
+تُجلب بيانات القراء والإذاعات والتلاوات عبر الإنترنت من [mp3quran.net](https://mp3quran.net/). تنزيل الملفات للاستماع دون اتصال متاح في تطبيق أندرويد، أما الإذاعات المباشرة فتتطلب اتصالًا بالإنترنت.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## التشغيل
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+يتطلب المشروع Flutter وDart وفق الإصدارات المحددة في `pubspec.yaml`.
+
+```bash
+flutter pub get
+flutter run
+```
+
+## التقنيات
+
+- Flutter وDart
+- Riverpod لإدارة الحالة
+- `just_audio` و`audio_service` لتشغيل الصوت في الخلفية
+- Hive وSharedPreferences لحفظ البيانات والإعدادات
