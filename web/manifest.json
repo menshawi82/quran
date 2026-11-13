@@ -1,11 +1,11 @@
 {
-    "name": "talawat",
-    "short_name": "talawat",
+    "name": "تلاوات | Telawat",
+    "short_name": "Telawat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#E9EDF2",
     "theme_color": "#2E7D5B",
-    "description": "A new Flutter project.",
+    "description": "استمع إلى تلاوات القرآن الكريم والإذاعات القرآنية، وتصفّح الأذكار والرقية الشرعية عبر تطبيق تلاوات.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

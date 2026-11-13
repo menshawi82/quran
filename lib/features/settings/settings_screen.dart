@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,14 +11,29 @@ import 'settings_controller.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  Future<void> _downloadAndroidApk(BuildContext context) async {
+    final apkUri = Uri.base.resolve('downloads/talawat-android.apk');
+    final launched = await launchUrl(
+      apkUri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذر فتح رابط تنزيل تطبيق أندرويد')),
+      );
+    }
+  }
+
   Future<void> _pickStorageLocation(
-      BuildContext context, WidgetRef ref, AppStorageLocation location) async {
+    BuildContext context,
+    WidgetRef ref,
+    AppStorageLocation location,
+  ) async {
     final settings = ref.read(settingsProvider);
     if (settings.storageLocation == location) return;
 
     var migrate = false;
-    final hasDownloads =
-        ref.read(downloadsServiceProvider).all().isNotEmpty;
+    final hasDownloads = ref.read(downloadsServiceProvider).all().isNotEmpty;
     if (hasDownloads) {
       final choice = await showDialog<String>(
         context: context,
@@ -26,9 +42,9 @@ class SettingsScreen extends ConsumerWidget {
           return AlertDialog(
             backgroundColor: neu.surface,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24)),
-            title: Text('نقل التنزيلات؟',
-                style: TextStyle(color: neu.text)),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            title: Text('نقل التنزيلات؟', style: TextStyle(color: neu.text)),
             content: Text(
               'لديك تنزيلات محفوظة. هل تريد نقلها إلى الموقع الجديد؟',
               style: TextStyle(color: neu.subtext),
@@ -40,8 +56,10 @@ class SettingsScreen extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop('keep'),
-                child: Text('تركها في مكانها',
-                    style: TextStyle(color: neu.subtext)),
+                child: Text(
+                  'تركها في مكانها',
+                  style: TextStyle(color: neu.subtext),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop('migrate'),
@@ -106,9 +124,7 @@ class SettingsScreen extends ConsumerWidget {
                     settings.offlineMode
                         ? Icons.wifi_off_rounded
                         : Icons.wifi_rounded,
-                    color: settings.offlineMode
-                        ? neu.accent
-                        : neu.subtext,
+                    color: settings.offlineMode ? neu.accent : neu.subtext,
                     size: 26,
                   ),
                 ),
@@ -128,8 +144,7 @@ class SettingsScreen extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Text(
                         'إيقاف كل طلبات الإنترنت والتشغيل من الملفات المحفوظة فقط',
-                        style:
-                            TextStyle(color: neu.subtext, fontSize: 13),
+                        style: TextStyle(color: neu.subtext, fontSize: 13),
                       ),
                     ],
                   ),
@@ -160,8 +175,11 @@ class SettingsScreen extends ConsumerWidget {
                 Row(
                   children: [
                     for (final entry in const [
-                      (AppThemeMode.system, Icons.brightness_auto_rounded,
-                          'تلقائي'),
+                      (
+                        AppThemeMode.system,
+                        Icons.brightness_auto_rounded,
+                        'تلقائي',
+                      ),
                       (AppThemeMode.light, Icons.wb_sunny_rounded, 'فاتح'),
                       (AppThemeMode.dark, Icons.dark_mode_rounded, 'داكن'),
                     ])
@@ -174,23 +192,23 @@ class SettingsScreen extends ConsumerWidget {
                                 ? neu.accent
                                 : null,
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            onTap: () =>
-                                controller.setThemeMode(entry.$1),
+                            onTap: () => controller.setThemeMode(entry.$1),
                             child: Column(
                               children: [
-                                Icon(entry.$2,
-                                    color: settings.themeMode == entry.$1
-                                        ? Colors.white
-                                        : neu.subtext,
-                                    size: 22),
+                                Icon(
+                                  entry.$2,
+                                  color: settings.themeMode == entry.$1
+                                      ? Colors.white
+                                      : neu.subtext,
+                                  size: 22,
+                                ),
                                 const SizedBox(height: 4),
                                 Text(
                                   entry.$3,
                                   style: TextStyle(
-                                    color:
-                                        settings.themeMode == entry.$1
-                                            ? Colors.white
-                                            : neu.subtext,
+                                    color: settings.themeMode == entry.$1
+                                        ? Colors.white
+                                        : neu.subtext,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -224,38 +242,43 @@ class SettingsScreen extends ConsumerWidget {
                   Row(
                     children: [
                       for (final entry in const [
-                        (AppStorageLocation.internal,
-                            Icons.smartphone_rounded, 'الداخلية'),
-                        (AppStorageLocation.external,
-                            Icons.sd_storage_rounded, 'بطاقة SD'),
+                        (
+                          AppStorageLocation.internal,
+                          Icons.smartphone_rounded,
+                          'الداخلية',
+                        ),
+                        (
+                          AppStorageLocation.external,
+                          Icons.sd_storage_rounded,
+                          'بطاقة SD',
+                        ),
                       ])
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsetsDirectional.only(end: 8),
                             child: NeuContainer(
-                              pressed:
-                                  settings.storageLocation != entry.$1,
+                              pressed: settings.storageLocation != entry.$1,
                               color: settings.storageLocation == entry.$1
                                   ? neu.accent
                                   : null,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12),
-                              onTap: () => _pickStorageLocation(
-                                  context, ref, entry.$1),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              onTap: () =>
+                                  _pickStorageLocation(context, ref, entry.$1),
                               child: Column(
                                 children: [
-                                  Icon(entry.$2,
-                                      color: settings.storageLocation ==
-                                              entry.$1
-                                          ? Colors.white
-                                          : neu.subtext,
-                                      size: 22),
+                                  Icon(
+                                    entry.$2,
+                                    color: settings.storageLocation == entry.$1
+                                        ? Colors.white
+                                        : neu.subtext,
+                                    size: 22,
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(
                                     entry.$3,
                                     style: TextStyle(
-                                      color: settings.storageLocation ==
-                                              entry.$1
+                                      color:
+                                          settings.storageLocation == entry.$1
                                           ? Colors.white
                                           : neu.subtext,
                                       fontSize: 13,
@@ -297,6 +320,42 @@ class SettingsScreen extends ConsumerWidget {
                   'مصدر التلاوات: موقع mp3quran.net',
                   style: TextStyle(color: neu.subtext, fontSize: 13),
                 ),
+                if (kIsWeb) ...[
+                  const SizedBox(height: 14),
+                  NeuContainer(
+                    padding: const EdgeInsets.all(14),
+                    onTap: () => _downloadAndroidApk(context),
+                    child: Row(
+                      children: [
+                        Icon(Icons.android_rounded, color: neu.accent),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'تحميل تطبيق أندرويد',
+                                style: TextStyle(
+                                  color: neu.text,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'تنزيل ملف APK',
+                                style: TextStyle(
+                                  color: neu.subtext,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.download_rounded, color: neu.accent),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Row(
                   children: [
