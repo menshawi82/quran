@@ -74,49 +74,53 @@ class _MainShellState extends ConsumerState<MainShell> {
           const MiniPlayer(),
         ],
       ),
-      bottomNavigationBar: NeuContainer(
-        margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-        padding: const EdgeInsets.all(6),
-        radius: 28,
-        child: Row(
-          children: [
-            for (var i = 0; i < _tabs.length; i++)
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => setState(() => _index = i),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: _index == i
-                          ? neu.accent.withValues(alpha: 0.15)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          _tabs[i].icon,
-                          size: 26,
-                          color: _index == i ? neu.accent : neu.subtext,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _tabs[i].label,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight:
-                                _index == i ? FontWeight.w700 : FontWeight.w400,
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: NeuContainer(
+          margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          padding: const EdgeInsets.all(6),
+          radius: 28,
+          child: Row(
+            children: [
+              for (var i = 0; i < _tabs.length; i++)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _index = i),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: _index == i
+                            ? neu.accent.withValues(alpha: 0.15)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _tabs[i].icon,
+                            size: 26,
                             color: _index == i ? neu.accent : neu.subtext,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 2),
+                          Text(
+                            _tabs[i].label,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: _index == i
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
+                              color: _index == i ? neu.accent : neu.subtext,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -144,11 +148,10 @@ class _VerticalNav extends StatelessWidget {
       builder: (context, constraints) {
         const gap = 8.0;
         const padding = 8.0;
-        final itemHeight = ((constraints.maxHeight -
-                    padding * 2 -
-                    gap * (_tabs.length - 1)) /
-                _tabs.length)
-            .clamp(48.0, 80.0);
+        final itemHeight =
+            ((constraints.maxHeight - padding * 2 - gap * (_tabs.length - 1)) /
+                    _tabs.length)
+                .clamp(48.0, 80.0);
         final compact = itemHeight < 62;
         return NeuContainer(
           padding: const EdgeInsets.all(padding),
@@ -158,7 +161,8 @@ class _VerticalNav extends StatelessWidget {
               for (var i = 0; i < _tabs.length; i++)
                 Padding(
                   padding: EdgeInsets.only(
-                      bottom: i == _tabs.length - 1 ? 0 : gap),
+                    bottom: i == _tabs.length - 1 ? 0 : gap,
+                  ),
                   child: GestureDetector(
                     onTap: () => onChanged(i),
                     child: AnimatedContainer(
@@ -187,8 +191,7 @@ class _VerticalNav extends StatelessWidget {
                               fontWeight: index == i
                                   ? FontWeight.w700
                                   : FontWeight.w400,
-                              color:
-                                  index == i ? neu.accent : neu.subtext,
+                              color: index == i ? neu.accent : neu.subtext,
                             ),
                           ),
                         ],
